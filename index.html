@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eksplorasi Genre & Teknik Vokal Musik</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #0a0b10;
+            --card-bg: rgba(22, 25, 38, 0.85);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-main: #f0f2f8;
+            --text-sub: #a0a5b5;
+            
+            --seriosa: #d4af37;
+            --pop: #ff6b8b;
+            --rock: #ff4757;
+            --dangdut: #ffa502;
+            --keroncong: #2ed573;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
+
+        header { text-align: center; margin-bottom: 30px; }
+        header .subtitle { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; color: var(--seriosa); margin-bottom: 8px; font-weight: 600; }
+        header h1 { font-family: 'Cinzel', serif; font-size: 1.8rem; font-weight: 700; color: #fff; margin-bottom: 10px; }
+        header p { color: var(--text-sub); font-size: 0.9rem; line-height: 1.4; }
+
+        .nav-tabs { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 25px; }
+        .tab-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); padding: 8px 14px; border-radius: 20px; color: var(--text-main); font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        .tab-btn.active { background: rgba(255, 255, 255, 0.2); border-color: #fff; }
+
+        .genre-grid { display: flex; flex-direction: column; gap: 20px; margin-bottom: 30px; }
+        .genre-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; position: relative; overflow: hidden; }
+        .genre-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--accent-color); }
+
+        .genre-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+        .genre-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: var(--accent-color); }
+        .genre-title h2 { font-size: 1.4rem; font-weight: 700; color: #fff; }
+
+        /* AUDIO PLAYER BOX STYLING */
+        .audio-player-box { background: rgba(0, 0, 0, 0.4); border-radius: 10px; padding: 12px; margin-bottom: 15px; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .audio-player-box p { font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        audio { width: 100%; height: 38px; outline: none; border-radius: 20px; }
+
+        .info-section { margin-bottom: 14px; }
+        .info-section h3 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-color); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+        .info-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+        .info-list li { font-size: 0.88rem; color: var(--text-sub); line-height: 1.4; position: relative; padding-left: 15px; }
+        .info-list li::before { content: '•'; position: absolute; left: 0; color: var(--accent-color); font-weight: bold; }
+        
+        .song-tag { display: inline-block; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.1); padding: 5px 10px; border-radius: 6px; font-size: 0.82rem; color: #fff; margin-top: 4px; }
+
+        /* KESIMPULAN STYLING */
+        .summary-card { background: rgba(30, 35, 50, 0.95); border: 2px solid var(--seriosa); border-radius: 16px; padding: 20px; margin-top: 25px; margin-bottom: 25px; }
+        .summary-card h2 { font-family: 'Cinzel', serif; font-size: 1.3rem; text-align: center; margin-bottom: 15px; color: var(--seriosa); }
+        .summary-grid { display: flex; flex-direction: column; gap: 10px; }
+        .summary-item { background: rgba(0, 0, 0, 0.3); border-left: 4px solid #fff; padding: 10px 12px; border-radius: 6px; }
+        .summary-item strong { font-size: 0.95rem; display: block; margin-bottom: 2px; }
+        .summary-item p { font-size: 0.82rem; color: var(--text-sub); line-height: 1.3; }
+
+        footer { text-align: center; padding-top: 15px; border-top: 1px solid var(--border-color); color: var(--text-sub); font-size: 0.8rem; }
+
+        .card-seriosa { --accent-color: var(--seriosa); }
+        .card-pop { --accent-color: var(--pop); }
+        .card-rock { --accent-color: var(--rock); }
+        .card-dangdut { --accent-color: var(--dangdut); }
+        .card-keroncong { --accent-color: var(--keroncong); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="subtitle"><i class="fa-solid fa-sliders"></i> Paduan Musik & Vokal</div>
+            <h1>KARAKTERISTIK & TEKNIK VOKAL</h1>
+            <p>Eksplorasi ciri khas, teknik bernyanyi, contoh lagu, dan pemutar audio dari 5 genre musik populer.</p>
+        </header>
+
+        <!-- Filter Tab -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="filterGenre('all', this)"><i class="fa-solid fa-border-all"></i> Semua</button>
+            <button class="tab-btn" onclick="filterGenre('seriosa', this)"><i class="fa-solid fa-masks-theater"></i> Seriosa</button>
+            <button class="tab-btn" onclick="filterGenre('pop', this)"><i class="fa-solid fa-heart"></i> Pop</button>
+            <button class="tab-btn" onclick="filterGenre('rock', this)"><i class="fa-solid fa-bolt"></i> Rock</button>
+            <button class="tab-btn" onclick="filterGenre('dangdut', this)"><i class="fa-solid fa-drum"></i> Dangdut</button>
+            <button class="tab-btn" onclick="filterGenre('keroncong', this)"><i class="fa-solid fa-guitar"></i> Keroncong</button>
+        </div>
+
+        <div class="genre-grid">
+
+            <!-- 1. SERIOSA -->
+            <div class="genre-card card-seriosa" data-genre="seriosa">
+                <div class="genre-header">
+                    <div class="genre-icon"><i class="fa-solid fa-masks-theater"></i></div>
+                    <div class="genre-title"><h2>Seriosa</h2></div>
+                </div>
+                <div class="audio-player-box">
+                    <p style="color: var(--seriosa);"><i class="fa-solid fa-music"></i> Ave Maria</p>
+                    <audio controls><source src="AveMaria.mp3" type="audio/mpeg"></audio>
+                </div>
+                <div class="info-section">
+                    <h3><i class="fa-solid fa-list-check"></i> Karakteristik</h3>
+                    <ul class="info-list">
+                        <li>Berasal dari tradisi musik klasik Barat.</li>
+                        <li>Lagu bersifat formal dan artistik.</li>
+                        <li>Melodi luas dan sering memiliki nada tinggi.</li>
+                        <li>Iringan biasanya piano atau orkestra.</li>
+                        <li>Mengutamakan keindahan suara dan teknik.</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <h3><i class="fa-solid fa-microphone-lines"></i> Teknik Vokal</h3>
+                    <ul class="info-list">
+                        <li>Pernapasan diafragma kuat & stabil.</li>
+                        <li>Resonansi rongga kepala & vibrato alami.</li>
+                        <li>Artikulasi sangat jelas karena setiap kata harus terdengar.</li>
+                        <li>Kontrol intonasi harus presisi.</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <h3><i></i></h3>
+                    <div</div>
+                </div>
+            </div>
+
+            <!-- 2. POP -->
+            <div class="genre-card card-pop" data-genre="pop">
+                <div class="genre-header">
+                    <div class="genre-icon"><i class="fa-solid fa-heart"></i></div>
+                    <div class="genre-title"><h2>Pop</h2></div>
+                </div>
+                <div class="audio-player-box">
+                    <p style="color: var(--pop);"><i class="fa-solid fa-music"></i> Sesi Potret</p>
+                    <audio controls><source src="SesiPotret.mp3" type="audio/mpeg"></audio>
+                </div>
+                <div class="info-section">
+                    <h3><i class="fa-solid fa-list-check"></i> Karakteristik</h3>
+                    <ul class="info-list">
+                        <li>Melodi fleksibel & mudah diingat.</li>
+                        <li>Lirik bertema kehidupan & cinta.</li>
+                        <li>Struktur lagu umumnya verse – chorus – bridge.</li>
+                        <li>Aransemen fleksibel dan mengikuti perkembangan zaman.</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <h3><i class="fa-solid fa-microphone-lines"></i> Teknik Vokal</h3>
+                    <ul class="info-list">
+                        <li>Artikulasi santai namun jelas.</li>
+                        <li>Penggunaan mixed voice yang halus.</li>
+                        <li>Kontrol dinamika: bisa lembut di verse dan lebih kuat di chorus.</li>
+                        <li>Vibrato digunakan secukupnya.</li>
+                        <li>Ekspresi emosi menjadi fokus utama.</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <h3><i></i></h3>
+                    <div</div>
+                </div>
+            </div>
+
+            <!-- 3. ROCK -->
+            <div class="genre-card card-rock" data-genre="rock">
+                <div class="genre-header">
+                    <div class="genre-icon"><i class="fa-solid fa-bolt"></i></div>
+                    <div class="genre-title"><h2>Rock</h2></div>
+                </div>
+                <div class="audio-player-box">
+                    <p style="color: var(--rock);"><i class="fa-solid fa-music"></i> I Miss U But I Hate U</p>
+                    <audio controls><source src="IMissUButIHateU.mp3" type="audio/mpeg"></audio>
+                </div>
+                <div class="info-section">
+                    <h3><i class="fa-solid fa-list-check"></i> Karakteristik</h3>
+                    <ul class="info-list">
+                        <li>Tempo cepat & ritme menghentak.</li>
+                        <li>Dominasi gitar listrik, bass, drum.</li>
+                        <li>Nuansa kuat, bebas, dan penuh energi.</li>
+                        <li>Vokal sering menjadi pusat ekspresi.</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <h3><i class="fa-solid fa-microphone-lines"></i> Teknik Vokal</h3>
+                    <ul class="info-list">
+                        <li>Belting nada tinggi bertenaga.</li>
+                        <li>Distorsi / grit serak terkontrol.</li>
+                        <li>Power vocal dengan dukungan napas besar.</li>
+                        <li>Frasa dinyanyikan dengan tekanan emosi tinggi.</li>
+                        <li>Tetap membutuhkan relaksasi tenggorokan agar tidak cedera.</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <h3><i></i></h3>
+                    <div</div>
+                </div>
+            </div>
+
+            <!-- 4. DANGDUT -->
+            <div class="genre-card card-dangdut" data-genre="dangdut">
+                <div class="genre-header">
+                    <div class="genre-icon"><i class="fa-solid fa-drum"></i></div>
+                    <div class="genre-title"><h2>Dangdut</h2></div>
+                </div>
+                <div class="audio-player-box">
+                    <p style="color: var(--dangdut);"><i class="fa-solid fa-music"></i> Nemen</p>
+                    <audio controls><source src="Nemen.mp3" type="audio/mpeg"></audio>
+                </div>
+                <div class="info-section">
+                    <h3><i class="fa-solid fa-list-check"></i> Karakteristik</h3>
+                    <ul class="info-list">
+                        <li>Akulturasi Melayu, India, & Arab.</li>
+                        <li>Ketukan gendang / tabla khas "dang-dut".</li>
+                        <li>Lagu sering mengajak pendengar bergoyang.</li>
+                        <li>Lirik dekat dengan kehidupan masyarakat.</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <h3><i class="fa-solid fa-microphone-lines"></i> Teknik Vokal</h3>
+                    <ul class="info-list">
+                        <li>Cengkok liukan nada Melayu khas.</li>
+                        <li>Vibrasi halus & improvisasi.</li>
+                        <li>Improvisasi melodi saat pengulangan bait.</li>
+                        <li>Pengucapan vokal dibuat lentur dan tidak kaku.</li>
+                        <li>Ekspresi harus komunikatif dan menghibur.</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <h3><i></i></h3>
+                    <div></div>
+                </div>
+            </div>
+
+            <!-- 5. KERONCONG -->
+            <div class="genre-card card-keroncong" data-genre="keroncong">
+                <div class="genre-header">
+                    <div class="genre-icon"><i class="fa-solid fa-guitar"></i></div>
+                    <div class="genre-title"><h2>Keroncong</h2></div>
+                </div>
+                <div class="audio-player-box">
+                    <p style="color: var(--keroncong);"><i class="fa-solid fa-music"></i> Bengawan Solo</p>
+                    <audio controls><source src="Bengawan Solo.mp3" type="audio/mpeg"></audio>
+                </div>
+                <div class="info-section">
+                    <h3><i class="fa-solid fa-list-check"></i> Karakteristik</h3>
+                    <ul class="info-list">
+                        <li>Dipengaruhi budaya musik Portugis.</li>
+                        <li>Tempo lambat & instrumen khas.</li>
+                        <li>Menggunakan alat musik khas seperti cak, cuk, gitar, cello, dan flute.</li>
+                        <li>Nuansanya tenang, romantis, dan nostalgik.</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <h3><i class="fa-solid fa-microphone-lines"></i> Teknik Vokal</h3>
+                    <ul class="info-list">
+                        <li>Legato menyambung dengan lembut.</li>
+                        <li>Cengkok keroncong yang halus.</li>
+                        <li>Pengaturan napas panjang & santai.</li>
+                        <li>Vibrato halus, tidak terlalu lebar.</li>
+                        <li>Penjiwaan dilakukan dengan ekspresi yang tenang.</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <h3><i></i></h3>
+                    <div</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- KESIMPULAN -->
+        <div class="summary-card">
+            <h2><i class="fa-solid fa-award"></i> Kesimpulan Perbandingan Genre</h2>
+            <div class="summary-grid">
+                <div class="summary-item" style="border-color: var(--seriosa);">
+                    <strong style="color: var(--seriosa);">1. Seriosa</strong>
+                    <p>Fokus pada ketepatan teknik & kemegahan vokal klasik.</p>
+                </div>
+                <div class="summary-item" style="border-color: var(--pop);">
+                    <strong style="color: var(--pop);">2. Pop</strong>
+                    <p>Fokus pada kejelasan pesan lirik & ekspresi emosi santai.</p>
+                </div>
+                <div class="summary-item" style="border-color: var(--rock);">
+                    <strong style="color: var(--rock);">3. Rock</strong>
+                    <p>Fokus pada energi tinggi, power vocal, & karakter suara.</p>
+                </div>
+                <div class="summary-item" style="border-color: var(--dangdut);">
+                    <strong style="color: var(--dangdut);">4. Dangdut</strong>
+                    <p>Fokus pada kelenturan vokal & keindahan cengkok.</p>
+                </div>
+                <div class="summary-item" style="border-color: var(--keroncong);">
+                    <strong style="color: var(--keroncong);">5. Keroncong</strong>
+                    <p>Fokus pada kelembutan legato & rasa nostalgia.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; Panduan Genre & Teknik Vokal Interaktif</p>
+        </footer>
+    </div>
+
+    <script>
+        function filterGenre(genre, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            document.querySelectorAll('.genre-card').forEach(card => {
+                if (genre === 'all' || card.getAttribute('data-genre') === genre) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
